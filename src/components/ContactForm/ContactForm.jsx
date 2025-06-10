@@ -2,14 +2,22 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useId } from "react";
 import s from "../ContactForm/ContactForm.module.css";
 import ContactSchema from "./ContactSchema";
+import { addContact } from "../../redux/contactsSlice";
+import { useDispatch } from "react-redux";
 
-const ContactForm = ({onSubmit}) => {
+const ContactForm = () => {
     const fieldId = useId();
 
+  const dispatch = useDispatch();
 
-  const handleSubmit = (values, helpers) =>
+  const handleNewContact = (values, helpers) =>
   {
-    onSubmit(values);
+    const newContact = {
+      id: `id-${Date.now()}`, 
+      name: values.username,
+      number: values.number,
+    };
+    dispatch(addContact(newContact));
     helpers.resetForm();
 
   }
@@ -20,7 +28,7 @@ const ContactForm = ({onSubmit}) => {
           username: '',
           number: '',
         }}
-        onSubmit={handleSubmit}
+        onSubmit={handleNewContact}
         validationSchema={ContactSchema}
       >
         <Form className={s.form}>
